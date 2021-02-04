@@ -1,10 +1,18 @@
 FROM node:15.7.0-buster
+WORKDIR /usr/src/app
+
+COPY . .
+
 RUN apt-get install gcc
 RUN npm install -g node-gyp
+RUN apt-get update && apt-get install vim -y
 
-WORKDIR /usr/src/app
-COPY package*.json ./
 RUN CXX=g++-6 npm install
+
+ENV JWT_SECRET=jwt-secret
+ENV MONGODB_URL=mongodb://mongodb/auth
 
 EXPOSE 80
 CMD [ "npm", "run", "dev" ]
+
+

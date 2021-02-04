@@ -1,0 +1,33 @@
+version: '3'
+services:
+  mongodb:
+    image: mongo:4-bionic
+    container_name: mongodb
+    build: ./mongodb
+    volumes:
+      - ./auth/data:/data/db
+  auth:
+    image: node:15.7.0-buster
+    container_name: auth
+    build:
+      context: ./auth
+      dockerfile: Dockerfile.dev
+  app:
+    image: node:14
+    container_name: app
+    build:
+      context: ./app
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./app/data:/usr/src/app/data
+      - ./app/src:/usr/src/app/src
+  ghi:
+    image: nginx:1.19-alpine
+    container_name: ghi
+    build:
+      context: ./ghi
+      dockerfile: Dockerfile
+    volumes:
+      - ./ghi/static:/usr/share/nginx/html
+    ports: 
+      - "8910:80"
